@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Was Sie antreibt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* dockyard: Navy dominiert, Teal als Akzent, Sand als Fläche, Grey für Linien. Layout: eine schmale Spalte fürs Handy. */
+  --navy: #153242;
+  --teal: #16e5a3;
+  --sand: #f7f4ed;
+  --grey: #dedede;
+  --white: #ffffff;
+  --display: "Lato", "Helvetica Neue", Arial, sans-serif;
+  --body: "Merriweather", Georgia, "Times New Roman", serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--sand);
+  color: var(--navy);
+  font-family: var(--body);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.6;
+}
+.wrap { max-width: 560px; margin: 0 auto; padding: 24px 20px 48px; min-height: 100%; display: flex; flex-direction: column; }
+h1, h2, h3, .label, button, .chip, .corner {
+  font-family: var(--display);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 400;
+}
+h1 { font-size: 30px; line-height: 1.15; margin: 0; text-wrap: balance; }
+h2 { font-size: 20px; line-height: 1.25; margin: 0; text-wrap: balance; }
+h3 { font-size: 13px; margin: 0 0 6px; color: var(--navy); font-weight: 700; }
+p { margin: 0; }
+.label { font-size: 12px; color: var(--navy); opacity: 0.75; }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 28px; }
+.brand { font-family: var(--display); font-size: 13px; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700; }
+.stack { display: flex; flex-direction: column; gap: 18px; }
+.note { font-style: italic; font-size: 13px; line-height: 1.5; }
+button {
+  font-size: 14px; border: 0; cursor: pointer; border-radius: 2px;
+  padding: 16px 20px; background: var(--navy); color: var(--sand);
+}
+button.primary { background: var(--teal); color: var(--navy); font-weight: 700; }
+button.ghost { background: transparent; color: var(--navy); border: 1px solid var(--navy); }
+button:focus-visible, .scale button:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+.hidden { display: none !important; }
+
+/* Startseite */
+.hero-tri { width: 100%; max-width: 360px; align-self: center; margin: 8px 0; }
+
+/* Fragen */
+.progress { height: 4px; background: var(--grey); border-radius: 2px; overflow: hidden; }
+.progress span { display: block; height: 100%; background: var(--teal); width: 0; transition: width 0.25s ease; }
+.statement { font-size: 22px; line-height: 1.5; min-height: 7.5em; display: flex; align-items: center; }
+.scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.scale button {
+  padding: 0; aspect-ratio: 1; font-size: 18px; font-weight: 700;
+  background: var(--white); color: var(--navy); border: 1px solid var(--grey);
+}
+.scale button.sel { background: var(--navy); color: var(--teal); border-color: var(--navy); }
+.scale-legend { display: flex; justify-content: space-between; font-size: 12px; font-style: italic; }
+.qnav { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 24px; }
+.qnav button { padding: 10px 14px; font-size: 12px; }
+
+/* Ergebnis */
+.result-head { background: var(--navy); color: var(--sand); padding: 24px 20px; margin: 0 -20px; }
+.result-head .label { color: var(--teal); opacity: 1; }
+.result-head h1 { color: var(--sand); margin: 6px 0 10px; }
+.tri-box { background: var(--white); padding: 12px; }
+.bars { display: flex; flex-direction: column; gap: 10px; }
+.bar { display: grid; grid-template-columns: 96px 1fr 44px; align-items: center; gap: 10px; font-size: 14px; }
+.bar .name { font-family: var(--display); text-transform: uppercase; letter-spacing: 0.06em; font-size: 12px; }
+.bar .track { height: 10px; background: var(--grey); }
+.bar .fill { height: 100%; background: var(--navy); }
+.bar.top .fill { background: var(--teal); }
+.bar .pct { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--display); }
+.card { background: var(--white); padding: 18px; }
+.card.dark { background: var(--navy); color: var(--sand); }
+.card.dark h3 { color: var(--teal); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chip { font-size: 11px; padding: 6px 10px; background: var(--sand); border: 1px solid var(--grey); }
+.card.dark .chip { background: transparent; border-color: var(--teal); color: var(--teal); }
+.people { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+.person { border-left: 0; padding: 10px 12px; background: var(--sand); }
+.person b { font-family: var(--display); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; font-size: 13px; display: block; }
+.systems { display: grid; gap: 10px; }
+.sys { padding: 14px; background: var(--white); }
+.sys h3 { margin-bottom: 4px; }
+.sys .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; font-size: 13px; }
+.sys .pair .label { display: block; margin-bottom: 2px; }
+textarea { width: 100%; margin-top: 8px; font-family: var(--body); font-weight: 300; font-size: 15px; color: var(--navy); background: var(--sand); border: 1px solid var(--grey); padding: 10px; border-radius: 2px; resize: vertical; }
+textarea:focus-visible { outline: 3px solid var(--teal); outline-offset: 1px; }
+.task { border: 2px solid var(--teal); padding: 18px; background: var(--white); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <span class="brand">dockyard</span>
+    <span class="label" id="toplabel">Schnelltest</span>
+  </div>
+
+  <!-- START -->
+  <section id="start" class="stack">
+    <h1>Was Sie antreibt</h1>
+    <p>Drei Emotionssysteme steuern, was uns motiviert und was uns stresst: Dominanz, Stimulanz und Balance. Jeder Mensch hat alle drei, in einer ganz eigenen Mischung.</p>
+    <svg class="hero-tri" viewBox="0 0 360 300" role="img" aria-label="Dreieck mit den drei Emotionssystemen Stimulanz, Dominanz und Balance">
+      <polygon points="40,40 320,40 180,270" fill="#ffffff" stroke="#153242" stroke-width="1.5"/>
+      <circle cx="40" cy="40" r="7" fill="#16e5a3"/>
+      <circle cx="320" cy="40" r="7" fill="#16e5a3"/>
+      <circle cx="180" cy="270" r="7" fill="#16e5a3"/>
+      <text x="40" y="24" text-anchor="middle" class="corner" font-size="13" fill="#153242">STIMULANZ</text>
+      <text x="320" y="24" text-anchor="middle" class="corner" font-size="13" fill="#153242">DOMINANZ</text>
+      <text x="180" y="294" text-anchor="middle" class="corner" font-size="13" fill="#153242">BALANCE</text>
+      <circle cx="205" cy="105" r="9" fill="#153242"/>
+      <text x="205" y="132" text-anchor="middle" font-family="Merriweather, Georgia, serif" font-style="italic" font-size="12" fill="#153242">Wo liegen Sie?</text>
+    </svg>
+    <p>Nehmen Sie sich 15 Minuten. Bewerten Sie 45 kurze Aussagen spontan, danach sehen Sie Ihr Profil, Ihren Typ und was das für Ihre Führung bedeutet. Zum Abschluss beantworten Sie drei Fragen für sich selbst.</p>
+    <p class="note">Ihre Antworten bleiben auf Ihrem Handy, es wird nichts gespeichert oder übertragen.</p>
+    <button class="primary" id="go" type="button">Test starten</button>
+  </section>
+
+  <!-- FRAGEN -->
+  <section id="quiz" class="stack hidden" aria-live="polite">
+    <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+    <p class="statement" id="statement"></p>
+    <div class="scale" id="scale" role="group" aria-label="Zustimmung von 1 bis 5"></div>
+    <div class="scale-legend"><span>trifft gar nicht zu</span><span>trifft voll zu</span></div>
+    <div class="qnav">
+      <button class="ghost" id="back" type="button">Zurück</button>
+      <span class="label" id="count"></span>
+    </div>
+  </section>
+
+  <!-- ERGEBNIS -->
+  <section id="result" class="stack hidden">
+    <div class="result-head">
+      <span class="label">Ihr Typ</span>
+      <h1 id="typename"></h1>
+      <p id="typeclaim"></p>
+    </div>
+    <div class="tri-box"><svg id="tri" viewBox="0 0 360 300" role="img" aria-label="Ihr Punkt im Dreieck der Emotionssysteme"></svg></div>
+    <div class="bars" id="bars"></div>
+
+    <div class="card"><h3>Was Sie antreibt</h3><p id="t-drive"></p></div>
+    <div class="card"><h3>Was Sie stresst</h3><p id="t-stress"></p></div>
+    <div class="card dark"><h3>Als Führungskraft</h3><p id="t-lead"></p></div>
+    <div class="card"><h3>Ihr blinder Fleck</h3><p id="t-blind"></p></div>
+    <div class="card dark"><h3 id="t-oppo-h">So erreichen Sie Ihren Gegenpol</h3><p id="t-oppo"></p><div class="chips" id="t-words"></div></div>
+    <div class="card">
+      <h3>Im selben Feld wie</h3>
+      <div class="people" id="t-people"></div>
+      <p class="note" style="margin-top:10px">Zuordnung nach öffentlicher Wahrnehmung, mit Augenzwinkern.</p>
+    </div>
+
+    <h2 style="margin-top:12px">Die drei Systeme</h2>
+    <div class="systems" id="systems"></div>
+
+    <h2 style="margin-top:12px">Ihre Reflexion</h2>
+    <p>Nehmen Sie sich drei Minuten und notieren Sie kurz:</p>
+    <div class="card"><label class="label" for="r1">Wann hat Ihnen Ihr stärkstes System in den letzten Wochen geholfen?</label><textarea id="r1" rows="3"></textarea></div>
+    <div class="card"><label class="label" for="r2">Wann stand es Ihnen im Weg?</label><textarea id="r2" rows="3"></textarea></div>
+    <div class="card"><label class="label" for="r3">Wer in Ihrem Team tickt vermutlich anders, und was braucht diese Person von Ihnen?</label><textarea id="r3" rows="3"></textarea></div>
+    <button class="ghost" id="copy" type="button">Ergebnis und Notizen kopieren</button>
+    <p class="note" id="copied" aria-live="polite"></p>
+
+    <div class="task">
+      <h3>Wenn Zeit bleibt: Austausch zu zweit</h3>
+      <p>Suchen Sie eine Person mit einem anderen Typ. Erzählen Sie sich gegenseitig: Was treibt mich an? Was bringt mich auf die Palme? Und was heißt das für unsere Zusammenarbeit?</p>
+    </div>
+
+    <p class="note">Schnelltest nach dem Modell der Emotionssysteme von Hans-Georg Häusel. Er gibt Hinweise auf Ihre Präferenzen und ist kein wissenschaftlicher Persönlichkeitstest.</p>
+    <button class="ghost" id="restart" type="button">Test neu starten</button>
+  </section>
+</div>
+
+<script>
+const ITEMS = [
+  ["D","In Diskussionen setze ich meine Sicht meist durch."],
+  ["S","Neue Ideen begeistern mich schneller als bewährte Lösungen."],
+  ["B","Klare Abläufe und Ordnung geben mir Ruhe."],
+  ["S","Routine langweilt mich rasch."],
+  ["D","Wenn andere besser sind als ich, spornt mich das sofort an."],
+  ["B","Bei wichtigen Entscheidungen lasse ich mir lieber Zeit."],
+  ["B","Spannungen zwischen Menschen spüre ich früh."],
+  ["D","Entscheidungen treffe ich lieber selbst, als auf andere zu warten."],
+  ["S","Auf Reisen zieht es mich an Orte, an denen ich noch nie war."],
+  ["D","Nach einem Erfolg suche ich gleich das nächste, größere Ziel."],
+  ["B","Ein gutes Miteinander im Team ist mir wichtiger als der schnelle Erfolg."],
+  ["S","Für etwas Neues gehe ich auch ein Risiko ein."],
+  ["S","Unbekannte Speisen probiere ich gern aus."],
+  ["D","Mir ist wichtig, selbst zu bestimmen, wie ich arbeite."],
+  ["B","Bewährtes gebe ich nur auf, wenn das Neue klar besser ist."],
+  ["D","Langsame Abstimmungen im Team machen mich ungeduldig."],
+  ["S","Mit Theorien und Gedankenspielen beschäftige ich mich gern."],
+  ["B","Unsicherheit über die Zukunft belastet mich."],
+  ["S","Unter neuen Leuten blühe ich auf."],
+  ["B","Familie und Freundeskreis sind mein wichtigster Halt."],
+  ["D","Gegen Widerstand werde ich entschlossener."],
+  ["D","Eine angesehene Position im Beruf ist mir wichtig."],
+  ["S","Wenn es in der Arbeit richtig rund geht, fühle ich mich am wohlsten."],
+  ["B","Bei Zielen gehe ich lieber auf Nummer sicher."],
+  ["B","Ungerechtigkeit gegenüber anderen ärgert mich sehr."],
+  ["S","Pläne ändere ich spontan, wenn sich etwas Spannenderes ergibt."],
+  ["D","In schwierigen Situationen behalte ich gern die Kontrolle."],
+  ["S","Eine Expedition ins Unbekannte reizt mich sehr."],
+  ["D","Erfolge dürfen ruhig sichtbar sein."],
+  ["B","Verlässlichkeit schätze ich mehr als Überraschungen."],
+  ["D","Wer mich herausfordert, bekommt meinen vollen Einsatz."],
+  ["S","Wenn nichts los ist, werde ich unruhig."],
+  ["B","Fehler suche ich zuerst bei mir selbst."],
+  ["B","Vor einer Veränderung möchte ich wissen, was gleich bleibt."],
+  ["D","In einer Gruppe übernehme ich gern die Führung."],
+  ["S","Bei der Kleidung folge ich meinem Geschmack, egal was andere erwarten."],
+  ["S","Gedanken zu ganz neuen Geschäftsfeldern reizen mich."],
+  ["B","In Konflikten suche ich zuerst den Ausgleich."],
+  ["D","Auf schwierige Aufgaben gehe ich mit der Erwartung zu, sie zu schaffen."],
+  ["D","Halbe Sachen ärgern mich."],
+  ["B","Feste Rituale im Alltag tun mir gut."],
+  ["S","Auf meinem Schreibtisch darf es auch mal chaotisch aussehen."],
+  ["S","Überraschungen im Alltag sind mir willkommen."],
+  ["D","Unter Druck laufe ich zur Höchstform auf."],
+  ["B","Zu allen Menschen bin ich gern zuvorkommend und freundlich."]
+];
+
+const NAMES = { D: "Dominanz", S: "Stimulanz", B: "Balance" };
+
+const TYPES = {
+  D: {
+    name: "Performer", claim: "Ihr stärkstes System ist Dominanz.",
+    drive: "Wirkung, Sieg und Autonomie. Sie wollen gestalten, entscheiden und sehen, dass sich etwas bewegt. Ein gewonnenes Ziel gibt Ihnen Energie für das nächste.",
+    stress: "Machtlosigkeit und Stillstand. Endlose Abstimmungen, fremdbestimmte Abläufe und das Gefühl, ausgebremst zu werden, bringen Sie schnell auf die Palme.",
+    lead: "Klar, schnell und zielstrebig. Sie ziehen das Team mit, geben Richtung vor und halten auch unter Druck Kurs.",
+    blind: "Leise Stimmen im Team gehen bei Ihrem Tempo leicht unter. Wer Sicherheit braucht, erlebt Sie unter Druck schnell als überrollend.",
+    oppoH: "So erreichen Sie Menschen mit viel Balance",
+    oppo: "Geben Sie Sicherheit, bevor Sie Tempo machen. Erklären Sie, was gleich bleibt, und laden Sie zum gemeinsamen Weg ein.",
+    words: ["gemeinsam", "zuverlässig", "bewährt", "solide", "langjährige Erfahrung"],
+    people: [["Niki Lauda", "Kompromisslos im Ziel, direkt im Ton, zurück ins Cockpit wenige Wochen nach dem Unfall."], ["Serena Williams", "Siegeswille als Markenzeichen, auf und neben dem Platz."]]
+  },
+  S: {
+    name: "Entdecker", claim: "Ihr stärkstes System ist Stimulanz.",
+    drive: "Neues, Abwechslung und Ideen. Sie lieben den Moment, in dem etwas zum ersten Mal passiert, und finden in fast allem etwas Spannendes.",
+    stress: "Langeweile, Routine und starre Regeln. Wenn alles vorgegeben ist und nichts überrascht, verlieren Sie schnell die Energie.",
+    lead: "Inspirierend und offen. Sie öffnen Möglichkeiten, bringen Leichtigkeit ins Team und machen Lust auf Veränderung.",
+    blind: "Ihr Interesse wandert, bevor das Alte fertig ist. Ihr Team erlebt manchmal zu viele neue Ideen auf einmal.",
+    oppoH: "So erreichen Sie Menschen mit viel Balance",
+    oppo: "Machen Sie das Neue einfach und greifbar. Zeigen Sie, wie es funktioniert und was dabei sicher bleibt.",
+    words: ["einfach", "solide", "problemlos", "bewährt", "dauerhaft"],
+    people: [["Felix Baumgartner", "Sprung aus der Stratosphäre, Neugier auf das, was noch niemand gemacht hat."], ["Richard Branson", "Von der Plattenfirma über die Fluglinie bis in den Weltraum."]]
+  },
+  B: {
+    name: "Bewahrer", claim: "Ihr stärkstes System ist Balance.",
+    drive: "Sicherheit, Zugehörigkeit und Ordnung. Sie schaffen Verlässlichkeit, spüren Stimmungen früh und sorgen dafür, dass niemand verloren geht.",
+    stress: "Unsicherheit und Konflikte. Unklare Lagen, Streit im Team und Veränderung ohne Plan kosten Sie viel Kraft.",
+    lead: "Verlässlich, fürsorglich und berechenbar. Bei Ihnen weiß das Team, woran es ist, und fühlt sich gut aufgehoben.",
+    blind: "Veränderung bremsen Sie gern zu früh. Was neu ist, wirkt auf Sie leicht riskanter, als es ist.",
+    oppoH: "So erreichen Sie Menschen mit viel Stimulanz",
+    oppo: "Zeigen Sie die Chance im Neuen. Lassen Sie Spielraum für eigene Ideen und vermeiden Sie zu viele Regeln auf einmal.",
+    words: ["spannend", "neue Möglichkeiten", "einmalig", "kreativ", "fortschrittlich"],
+    people: [["David Attenborough", "Jahrzehntelang dieselbe ruhige Stimme, fürsorglich gegenüber Mensch und Natur."], ["Toni Kroos", "Ruhepol im Mittelfeld, verlässlich, präzise, ohne Show."]]
+  },
+  DS: {
+    name: "Pionier", claim: "Dominanz und Stimulanz prägen Sie gemeinsam.",
+    drive: "Neuland erobern und dabei gewinnen. Sie wollen als Erste dort sein, wo noch niemand war, und es aus eigener Kraft schaffen.",
+    stress: "Bürokratie und Mittelmaß. Wenn Vorsicht wichtiger ist als Mut, fühlen Sie sich eingesperrt.",
+    lead: "Visionär mit Durchsetzungskraft. Sie geben ein großes Bild vor und setzen es gegen Widerstände um.",
+    blind: "Risiken unterschätzen Sie gern, und Ihr Team kommt bei Ihrem Tempo nicht immer mit.",
+    oppoH: "So erreichen Sie Menschen mit viel Balance",
+    oppo: "Übersetzen Sie die Vision in sichere nächste Schritte. Würdigen Sie, was sich bewährt hat.",
+    words: ["langjährige Erfahrung", "dauerhaft", "gemeinsam", "zuverlässig"],
+    people: [["Reinhold Messner", "Alle Achttausender ohne Flaschensauerstoff, immer auf der Suche nach dem nächsten Grenzgang."], ["Steve Jobs", "Große Vision, hoher Anspruch, kompromisslos in der Umsetzung."]]
+  },
+  DB: {
+    name: "Kapitän", claim: "Dominanz und Balance prägen Sie gemeinsam.",
+    drive: "Ziele mit Plan und Disziplin erreichen. Sie wollen gewinnen, und zwar sauber vorbereitet und mit einer Mannschaft, auf die Verlass ist.",
+    stress: "Chaos und Kontrollverlust. Spontane Kursänderungen ohne Grund und fehlende Verbindlichkeit ärgern Sie.",
+    lead: "Konsequent, strukturiert und berechenbar. Sie halten Kurs, auch bei schwerem Wetter, und Ihr Team weiß, was gilt.",
+    blind: "Für Experimente bleibt wenig Raum. Neue Wege prüfen Sie oft so lange, bis die Chance vorbei ist.",
+    oppoH: "So erreichen Sie Menschen mit viel Stimulanz",
+    oppo: "Geben Sie Freiraum innerhalb klarer Leitplanken. Laden Sie zum Ausprobieren ein und feiern Sie neue Ideen.",
+    words: ["kreativ", "fortschrittlich", "neue Möglichkeiten", "spannend"],
+    people: [["Boris Herrmann", "Allein um die Welt, mit Plan, Disziplin und Ruhe auch nach der Kollision kurz vor dem Ziel."], ["Roger Federer", "Höchste Ziele, erreicht mit Konstanz, Disziplin und Gelassenheit."]]
+  },
+  SB: {
+    name: "Brückenbauer", claim: "Stimulanz und Balance prägen Sie gemeinsam.",
+    drive: "Neugier in einem guten Miteinander. Sie entdecken gern Neues, am liebsten zusammen mit Menschen, die Ihnen wichtig sind.",
+    stress: "Härte und Machtspiele. Ellbogen, Druck von oben und kalte Kommunikation rauben Ihnen die Freude.",
+    lead: "Offen und empathisch. Sie verbinden Menschen und Ideen und schaffen ein Klima, in dem sich andere etwas trauen.",
+    blind: "Harte Entscheidungen schieben Sie gern auf. Klare Ansagen fallen Ihnen schwerer als Verständnis.",
+    oppoH: "So erreichen Sie Menschen mit viel Dominanz",
+    oppo: "Kommen Sie schnell auf den Punkt. Nennen Sie Ziel, Nutzen und Ergebnis, bevor Sie über das Miteinander sprechen.",
+    words: ["Erfolg", "Stärke", "schnell", "erstklassig", "überlegen"],
+    people: [["Jane Goodall", "Jahrzehnte voller Neugier im Urwald, mit großer Wärme gegenüber Tier und Mensch."], ["Hape Kerkeling", "Neugierig, verwandlungsfreudig und dabei immer menschlich nahbar."]]
+  },
+  X: {
+    name: "Allrounder", claim: "Ihre drei Systeme sind ähnlich stark ausgeprägt.",
+    drive: "Je nach Lage etwas anderes. Sie können Tempo machen, Neues entdecken und Stabilität geben, und Sie wechseln zwischen diesen Modi.",
+    stress: "Einseitige Erwartungen. Wenn Sie dauerhaft nur eine Rolle spielen sollen, fehlt Ihnen etwas.",
+    lead: "Anpassungsfähig. Sie vermitteln zwischen den Lagern im Team und verstehen Menschen mit sehr unterschiedlichen Antrieben.",
+    blind: "Ihr Team erlebt Sie manchmal als schwer greifbar, weil nicht klar ist, welcher Modus gerade gilt.",
+    oppoH: "Ihr Tipp",
+    oppo: "Entscheiden Sie bewusst, welches System die Lage gerade braucht, und sagen Sie es Ihrem Team: heute Tempo, heute Ideen oder heute Sicherheit.",
+    words: ["Erfolg", "spannend", "gemeinsam"],
+    people: [["Dirk Nowitzki", "Ehrgeizig, offen für Neues und gleichzeitig ein verlässlicher Teamspieler."]]
+  }
+};
+
+const SYSTEMS = [
+  ["D", "Dominanz", "Konkurrenz, Status, Autonomie. Der Motor für Fortschritt und große Ziele.", "Stolz, Durchsetzung, Siegesgefühl", "Ärger, Rückschritt, Machtlosigkeit"],
+  ["S", "Stimulanz", "Exploration, Entdeckung, Lust auf Reiz und Risiko. Die Kraft hinter jeder Innovation.", "Prickeln, Spaß, Abwechslung", "Langeweile, Disziplin"],
+  ["B", "Balance", "Planbarkeit, Sicherheit, Konstanz. Gibt Stabilität und schützt vor unnötigem Risiko.", "Geborgenheit, Sicherheit", "Angst, Stress, Unsicherheit"]
+];
+
+const $ = id => document.getElementById(id);
+let answers = new Array(ITEMS.length).fill(null);
+let idx = 0;
+
+function show(id) {
+  ["start", "quiz", "result"].forEach(s => $(s).classList.toggle("hidden", s !== id));
+  $("toplabel").textContent = id === "result" ? "Ihr Ergebnis" : "Schnelltest";
+  window.scrollTo(0, 0);
+}
+
+function renderQ() {
+  const [, text] = ITEMS[idx];
+  $("statement").textContent = text;
+  $("count").textContent = (idx + 1) + " / " + ITEMS.length;
+  $("bar").style.width = (idx / ITEMS.length * 100) + "%";
+  $("back").style.visibility = idx === 0 ? "hidden" : "visible";
+  const sc = $("scale");
+  sc.innerHTML = "";
+  for (let v = 1; v <= 5; v++) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.id = "opt" + v;
+    b.textContent = v;
+    b.setAttribute("aria-label", v + " von 5");
+    if (answers[idx] === v) b.classList.add("sel");
+    b.addEventListener("click", () => pick(v));
+    sc.appendChild(b);
+  }
+}
+
+function pick(v) {
+  answers[idx] = v;
+  [...$("scale").children].forEach((b, i) => b.classList.toggle("sel", i + 1 === v));
+  setTimeout(() => {
+    if (idx < ITEMS.length - 1) { idx++; renderQ(); }
+    else { renderResult(); show("result"); }
+  }, 180);
+}
+
+function score() {
+  const raw = { D: 0, S: 0, B: 0 };
+  ITEMS.forEach(([k], i) => { raw[k] += (answers[i] || 3) - 1; });
+  const tot = raw.D + raw.S + raw.B;
+  const pct = tot === 0 ? { D: 100 / 3, S: 100 / 3, B: 100 / 3 } :
+    { D: raw.D / tot * 100, S: raw.S / tot * 100, B: raw.B / tot * 100 };
+  const order = Object.keys(pct).sort((a, b) => pct[b] - pct[a]);
+  const [a, b, c] = order;
+  let type;
+  if (pct[a] - pct[c] < 8) type = "X";
+  else if (pct[a] - pct[b] < 6) type = ["DS", "DB", "SB"].find(t => t.includes(a) && t.includes(b));
+  else type = a;
+  return { pct, type, top: a };
+}
+
+function renderTri(pct) {
+  const S = [40, 40], D = [320, 40], B = [180, 270];
+  const p = { D: pct.D / 100, S: pct.S / 100, B: pct.B / 100 };
+  const x = p.D * D[0] + p.S * S[0] + p.B * B[0];
+  const y = p.D * D[1] + p.S * S[1] + p.B * B[1];
+  const cx = (S[0] + D[0] + B[0]) / 3, cy = (S[1] + D[1] + B[1]) / 3;
+  $("tri").innerHTML = `
+    <polygon points="40,40 320,40 180,270" fill="#f7f4ed" stroke="#153242" stroke-width="1.5"/>
+    <line x1="${cx}" y1="${cy}" x2="180" y2="40" stroke="#dedede" stroke-width="1"/>
+    <line x1="${cx}" y1="${cy}" x2="110" y2="155" stroke="#dedede" stroke-width="1"/>
+    <line x1="${cx}" y1="${cy}" x2="250" y2="155" stroke="#dedede" stroke-width="1"/>
+    <circle cx="${cx}" cy="${cy}" r="3" fill="#dedede"/>
+    <text x="40" y="24" text-anchor="middle" font-family="Lato, Arial, sans-serif" letter-spacing="1" font-size="13" fill="#153242">STIMULANZ</text>
+    <text x="320" y="24" text-anchor="middle" font-family="Lato, Arial, sans-serif" letter-spacing="1" font-size="13" fill="#153242">DOMINANZ</text>
+    <text x="180" y="294" text-anchor="middle" font-family="Lato, Arial, sans-serif" letter-spacing="1" font-size="13" fill="#153242">BALANCE</text>
+    <circle cx="${x}" cy="${y}" r="16" fill="#16e5a3" opacity="0.35"/>
+    <circle cx="${x}" cy="${y}" r="9" fill="#153242" stroke="#16e5a3" stroke-width="3"/>`;
+}
+
+function renderResult() {
+  const { pct, type, top } = score();
+  const t = TYPES[type];
+  $("typename").textContent = t.name;
+  $("typeclaim").textContent = t.claim;
+  renderTri(pct);
+  const rounded = { D: Math.round(pct.D), S: Math.round(pct.S) };
+  rounded.B = 100 - rounded.D - rounded.S;
+  $("bars").innerHTML = ["D", "S", "B"].map(k => `
+    <div class="bar${k === top ? " top" : ""}">
+      <span class="name">${NAMES[k]}</span>
+      <span class="track"><span class="fill" style="width:${pct[k].toFixed(1)}%;display:block"></span></span>
+      <span class="pct">${rounded[k]} %</span>
+    </div>`).join("");
+  $("t-drive").textContent = t.drive;
+  $("t-stress").textContent = t.stress;
+  $("t-lead").textContent = t.lead;
+  $("t-blind").textContent = t.blind;
+  $("t-oppo-h").textContent = t.oppoH;
+  $("t-oppo").textContent = t.oppo;
+  $("t-words").innerHTML = t.words.map(w => `<span class="chip">${w}</span>`).join("");
+  $("t-people").innerHTML = t.people.map(([n, d]) => `<div class="person"><b>${n}</b>${d}</div>`).join("");
+  $("systems").innerHTML = SYSTEMS.map(([k, n, d, plus, minus]) => `
+    <div class="sys">
+      <h3>${n}, ${rounded[k]} %</h3>
+      <p>${d}</p>
+      <div class="pair"><div><span class="label">Belohnung</span>${plus}</div><div><span class="label">Vermeidung</span>${minus}</div></div>
+    </div>`).join("");
+}
+
+$("go").addEventListener("click", () => { idx = 0; renderQ(); show("quiz"); });
+$("back").addEventListener("click", () => { if (idx > 0) { idx--; renderQ(); } });
+$("copy").addEventListener("click", async () => {
+  const lines = [$("typename").textContent, $("typeclaim").textContent,
+    ...[...document.querySelectorAll(".bar")].map(b => b.querySelector(".name").textContent + ": " + b.querySelector(".pct").textContent),
+    "", "Geholfen: " + $("r1").value, "Im Weg: " + $("r2").value, "Tickt anders: " + $("r3").value];
+  try { await navigator.clipboard.writeText(lines.join("\n")); $("copied").textContent = "Kopiert. Fügen Sie es in eine Notiz oder Mail ein."; }
+  catch (e) { $("copied").textContent = "Kopieren hat nicht geklappt. Ein Screenshot funktioniert genauso."; }
+});
+$("restart").addEventListener("click", () => { answers = new Array(ITEMS.length).fill(null); idx = 0; ["r1","r2","r3"].forEach(i => $(i).value = ""); $("copied").textContent = ""; show("start"); });
+</script>
+</body>
+</html>
